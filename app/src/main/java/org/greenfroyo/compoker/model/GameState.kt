@@ -1,12 +1,13 @@
 package org.greenfroyo.compoker.model
 
-import org.greenfroyo.compoker.model.Phase.*
+import org.greenfroyo.compoker.PokerHand
+import org.greenfroyo.compoker.getPokerHand
 
 data class GameState(
-    var phase: Phase = BET,
-    var credit: Int = 200,
-    var bet: Int = 5,
-    var deck: Deck = Deck(),
+    val phase: Phase = BET(),
+    val credit: Int = 200,
+    val bet: Int = 5,
+    val deck: Deck = Deck(),
     val cards: Array<Card> = Array(5) { Card() }
 ) {
     override fun equals(other: Any?): Boolean {
@@ -33,10 +34,22 @@ data class GameState(
         return result
     }
 
+    fun hand() = cards.getPokerHand()
 }
 
-enum class Phase {
-    BET,
-    DRAWING,
-    RESULT
+sealed class Phase {}
+
+class BET(): Phase(){
+
+}
+
+class DRAW(): Phase(){
+
+}
+
+data class PICK(val discards: Array<Boolean>): Phase(){
+
+}
+
+class RESULT(val hand: PokerHand): Phase(){
 }

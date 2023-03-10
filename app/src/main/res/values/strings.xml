@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Compoker</string>
+    <string name="text_win_royal_straight_flush">Royal Straight Flush</string>
+    <string name="text_win_straight_flush">Straight Flush</string>
+    <string name="text_win_four_of_a_kind">Four of a Kind</string>
+    <string name="text_win_full_house">Full House</string>
+    <string name="text_win_straight">Straight</string>
+    <string name="text_win_flush">Flush</string>
+    <string name="text_win_three_of_a_kind">Three of a Kind</string>
+    <string name="text_win_two_pair">Two Pair</string>
+    <string name="text_win_one_pair">One Pair</string>
+    <string name="text_win_jacks_or_better">Jacks or Better</string>
+
 </resources>

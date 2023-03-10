@@ -1,34 +1,62 @@
 package org.greenfroyo.compoker
 
-import android.util.ArrayMap
+import androidx.annotation.StringRes
 import org.greenfroyo.compoker.model.*
 import org.greenfroyo.compoker.model.CardSuit.SPADE
-import kotlin.collections.List
-import kotlin.collections.all
-import kotlin.collections.map
 import kotlin.collections.set
-import kotlin.collections.sorted
 
-sealed class PokerHand {}
+sealed class PokerHand() {
+    @StringRes
+    abstract fun getDisplayText(): Int
+}
 
-class ROYAL_STRAIGHT_FLUSH : PokerHand()
-class STRAIGHT_FLUSH : PokerHand()
-class FOUR_OF_A_KIND : PokerHand()
-class FULL_HOUSE : PokerHand()
-class STRAIGHT : PokerHand()
-class FLUSH : PokerHand()
-class THREE_OF_A_KIND : PokerHand()
-class TWO_PAIR : PokerHand()
-class ONE_PAIR : PokerHand()
-class JACKS_OR_BETTER : PokerHand()
+object ROYAL_STRAIGHT_FLUSH : PokerHand() {
+    override fun getDisplayText() = R.string.text_win_royal_straight_flush
+}
 
-fun List<Card>.getOccurences(): Map<CardNumber, Int> {
+object STRAIGHT_FLUSH : PokerHand() {
+    override fun getDisplayText() = R.string.text_win_flush
+}
+
+object FOUR_OF_A_KIND : PokerHand() {
+    override fun getDisplayText() = R.string.text_win_four_of_a_kind
+}
+
+object FULL_HOUSE : PokerHand() {
+    override fun getDisplayText() = R.string.text_win_full_house
+}
+
+object STRAIGHT : PokerHand() {
+    override fun getDisplayText() = R.string.text_win_straight
+}
+
+object FLUSH : PokerHand() {
+    override fun getDisplayText() = R.string.text_win_flush
+}
+
+object THREE_OF_A_KIND : PokerHand() {
+    override fun getDisplayText() = R.string.text_win_three_of_a_kind
+}
+
+object TWO_PAIR : PokerHand() {
+    override fun getDisplayText() = R.string.text_win_two_pair
+}
+
+object ONE_PAIR : PokerHand() {
+    override fun getDisplayText() = R.string.text_win_one_pair
+}
+
+object JACKS_OR_BETTER : PokerHand() {
+    override fun getDisplayText() = R.string.text_win_jacks_or_better
+}
+
+private fun Array<Card>.getOccurences(): Map<CardNumber, Int> {
     val occurences = CardNumber.all().associateWith { 0 }.toMutableMap()
     this.map { occurences[it.number] = (occurences[it.number] ?: 0) + 1 }
     return occurences
 }
 
-fun List<Card>.isStraight(): Boolean {
+private fun Array<Card>.isStraight(): Boolean {
     if (this.size != 5) throw IllegalArgumentException("Card must be 5")
     val sorted = this.map { it.number.value }.sorted()
     for (i in 1 until sorted.size) {
@@ -37,16 +65,16 @@ fun List<Card>.isStraight(): Boolean {
     return true
 }
 
-fun List<Card>.isFlush(): Boolean {
+private fun Array<Card>.isFlush(): Boolean {
     if (this.size != 5) throw IllegalArgumentException("Card must be 5")
     return this.all { it.suit == this[0].suit }
 }
 
-fun List<Card>.isStraightFlush(): Boolean {
+private fun Array<Card>.isStraightFlush(): Boolean {
     return isStraight() && isFlush()
 }
 
-fun List<Card>.isRoyalStraightFlush(): Boolean {
+private fun Array<Card>.isRoyalStraightFlush(): Boolean {
     return contains(Card(SPADE, TEN)) &&
             contains(Card(SPADE, JACK)) &&
             contains(Card(SPADE, QUEEN)) &&
@@ -54,35 +82,49 @@ fun List<Card>.isRoyalStraightFlush(): Boolean {
             contains(Card(SPADE, ACE))
 }
 
-fun List<Card>.isFourOfAKind(): Boolean {
+private fun Array<Card>.isFourOfAKind(): Boolean {
     if (this.size != 5) throw IllegalArgumentException("Card must be 5")
     return this.getOccurences().containsValue(4)
 }
 
-fun List<Card>.isFullHouse(): Boolean {
+private fun Array<Card>.isFullHouse(): Boolean {
     if (this.size != 5) throw IllegalArgumentException("Card must be 5")
     val occurences = this.getOccurences()
     return occurences.containsValue(3) && occurences.containsValue(2)
 }
 
-fun List<Card>.isThreeOfAKind(): Boolean {
+private fun Array<Card>.isThreeOfAKind(): Boolean {
     if (this.size != 5) throw IllegalArgumentException("Card must be 5")
     return this.getOccurences().containsValue(3)
 }
 
-fun List<Card>.isTwoPair(): Boolean {
+private fun Array<Card>.isTwoPair(): Boolean {
     if (this.size != 5) throw IllegalArgumentException("Card must be 5")
     val occurences = this.getOccurences()
     return occurences.count { it.value == 2 } == 2
 }
 
-fun List<Card>.isOnePair(): Boolean {
+private fun Array<Card>.isOnePair(): Boolean {
     if (this.size != 5) throw IllegalArgumentException("Card must be 5")
     val occurences = this.getOccurences()
     return occurences.count { it.value == 2 } == 1
 }
 
-fun List<Card>.isJacksOrBetter(): Boolean {
+private fun Array<Card>.isJacksOrBetter(): Boolean {
     if (this.size != 5) throw IllegalArgumentException("Card must be 5")
     return this.all { it.number.value >= 11 }
+}
+
+fun Array<Card>.getPokerHand(): PokerHand? {
+    return if (isRoyalStraightFlush()) ROYAL_STRAIGHT_FLUSH
+    else if (isStraightFlush()) STRAIGHT_FLUSH
+    else if (isFourOfAKind()) FOUR_OF_A_KIND
+    else if (isFullHouse()) FULL_HOUSE
+    else if (isFlush()) FLUSH
+    else if (isStraight()) STRAIGHT
+    else if (isThreeOfAKind()) THREE_OF_A_KIND
+    else if (isTwoPair()) TWO_PAIR
+    else if (isOnePair()) ONE_PAIR
+    else if (isJacksOrBetter()) JACKS_OR_BETTER
+    else null
 }
