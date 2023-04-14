@@ -22,9 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.greenfroyo.compoker.model.Card
-import org.greenfroyo.compoker.model.GameState
-import org.greenfroyo.compoker.model.GameViewModel
+import org.greenfroyo.compoker.model.*
 import org.greenfroyo.compoker.ui.theme.CompokerTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,10 +48,13 @@ fun MainPage(viewModel: GameViewModel = viewModel()) {
     val state by viewModel.state.collectAsState()
     Column(modifier = Modifier.fillMaxSize()) {
         StatusView(credit = state.credit)
-        ContentView(Modifier.weight(1f), state.cards)
+        ContentView(Modifier.weight(1f), state.cards, state.dropSelection) { i ->
+            viewModel.toggleDropCardAt(i)
+        }
         ControlView(state = state,
-            actSwitchBet = {viewModel.switchBet()},
-            actDraw = { viewModel.draw() })
+            actSwitchBet = { viewModel.switchBet() },
+            actDraw = { viewModel.draw() },
+            actDrop = { viewModel.drop() })
     }
 }
 
@@ -72,7 +73,12 @@ fun StatusView(modifier: Modifier = Modifier, credit: Int) {
 }
 
 @Composable
-fun ContentView(modifier: Modifier = Modifier, cards: Array<Card>) {
+fun ContentView(
+    modifier: Modifier = Modifier,
+    cards: Array<Card>,
+    selection: Selection,
+    onSelect: (Int) -> Unit = { _ -> }
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -82,7 +88,7 @@ fun ContentView(modifier: Modifier = Modifier, cards: Array<Card>) {
             .padding(16.dp)
             .then(modifier)
     ) {
-        BoardView(cards = cards)
+        BoardView(cards = cards, selection = selection, onSelect = { i -> onSelect(i) })
         cards.getPokerHand()?.also {
             Text(text = stringResource(id = it.getDisplayText()))
         }
@@ -90,10 +96,13 @@ fun ContentView(modifier: Modifier = Modifier, cards: Array<Card>) {
 }
 
 @Composable
-fun ControlView(modifier: Modifier = Modifier,
-                state: GameState,
-                actSwitchBet: () -> Unit,
-                actDraw: () -> Unit) {
+fun ControlView(
+    modifier: Modifier = Modifier,
+    state: GameState,
+    actSwitchBet: () -> Unit,
+    actDraw: () -> Unit,
+    actDrop: () -> Unit
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically,
@@ -104,7 +113,7 @@ fun ControlView(modifier: Modifier = Modifier,
             .then(modifier)
     ) {
         Button(onClick = { /*TODO*/ }, enabled = false) {
-            Text(text = " ")
+            Text(text = "TABLE")
         }
         Text(
             text = state.bet.toCredit(),
@@ -114,8 +123,11 @@ fun ControlView(modifier: Modifier = Modifier,
                 .padding(4.dp)
                 .clickable { actSwitchBet() }
         )
-        Button(onClick = { actDraw() }) {
+        Button(onClick = { actDraw() }, enabled = state.enableDraw()) {
             Text(text = "Draw")
+        }
+        Button(onClick = { actDrop() }, enabled = state.enableDrop()) {
+            Text(text = "Drop")
         }
     }
 }

@@ -10,6 +10,11 @@ data class Deck(val position: Int = 0, val cards: List<Card> = newDeck().shuffle
         }
         return Pair(cards.slice(position until position+nums), copy(position = position+nums))
     }
+
+    fun drawOne(): Pair<Card, Deck>{
+        val (cards, deck) = draw(1)
+        return Pair(cards[0], deck)
+    }
 }
 
 private fun newDeck() = arrayOf(SPADE, HEART, CLUB, DIAMOND)
