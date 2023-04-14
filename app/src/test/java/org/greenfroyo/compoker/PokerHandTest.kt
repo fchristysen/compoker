@@ -10,7 +10,7 @@ internal class PokerHandTest {
     @Test
     fun `test isStraight`() {
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(SPADE, TEN),
             Card(HEART, JACK),
             Card(SPADE, QUEEN),
@@ -25,7 +25,7 @@ internal class PokerHandTest {
     @Test
     fun `test isStraight cross TWO`() {
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(SPADE, ACE),
             Card(HEART, TWO),
             Card(CLUB, THREE),
@@ -40,7 +40,7 @@ internal class PokerHandTest {
     @Test
     fun `test isStraight jumbled position`() {
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(SPADE, EIGHT),
             Card(CLUB, SIX),
             Card(CLUB, SEVEN),
@@ -55,7 +55,7 @@ internal class PokerHandTest {
     @Test
     fun `test isStraight return false 1`() {
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(SPADE, EIGHT),
             Card(CLUB, THREE),
             Card(SPADE, SEVEN),
@@ -70,7 +70,7 @@ internal class PokerHandTest {
     @Test
     fun `test isStraight return false 2`() {
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(SPADE, EIGHT),
             Card(DIAMOND, THREE),
             Card(DIAMOND, SEVEN),
@@ -85,7 +85,7 @@ internal class PokerHandTest {
     @Test
     fun `test isFlush`() {
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(SPADE, EIGHT),
             Card(SPADE, THREE),
             Card(SPADE, SEVEN),
@@ -100,7 +100,7 @@ internal class PokerHandTest {
     @Test
     fun `test isFlush return false`() {
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(SPADE, EIGHT),
             Card(HEART, THREE),
             Card(SPADE, SEVEN),
@@ -115,7 +115,7 @@ internal class PokerHandTest {
     @Test
     fun `test isFourOfAKind 1`(){
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(SPADE, EIGHT),
             Card(HEART, EIGHT),
             Card(CLUB, EIGHT),
@@ -130,7 +130,7 @@ internal class PokerHandTest {
     @Test
     fun `test isFourOfAKind 2`(){
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(SPADE, ACE),
             Card(HEART, ACE),
             Card(CLUB, ACE),
@@ -145,7 +145,7 @@ internal class PokerHandTest {
     @Test
     fun `test isThreeOfAKind`(){
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(SPADE, ACE),
             Card(HEART, ACE),
             Card(CLUB, ACE),
@@ -160,7 +160,7 @@ internal class PokerHandTest {
     @Test
     fun `test isFullHouse`(){
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(SPADE, ACE),
             Card(HEART, ACE),
             Card(CLUB, ACE),
@@ -175,7 +175,7 @@ internal class PokerHandTest {
     @Test
     fun `test isTwoPair`(){
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(SPADE, ACE),
             Card(HEART, ACE),
             Card(CLUB, EIGHT),
@@ -190,7 +190,7 @@ internal class PokerHandTest {
     @Test
     fun `test isOnePair`(){
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(SPADE, ACE),
             Card(HEART, ACE),
             Card(CLUB, SEVEN),
@@ -205,7 +205,7 @@ internal class PokerHandTest {
     @Test
     fun `test isStraightFlush`(){
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(HEART, SEVEN),
             Card(HEART, EIGHT),
             Card(HEART, SIX),
@@ -220,7 +220,7 @@ internal class PokerHandTest {
     @Test
     fun `test isRoyalStraightFlush`(){
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(SPADE, TEN),
             Card(SPADE, ACE),
             Card(SPADE, JACK),
@@ -235,7 +235,7 @@ internal class PokerHandTest {
     @Test
     fun `test isJacksOrBetter`(){
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(HEART, QUEEN),
             Card(HEART, ACE),
             Card(SPADE, JACK),
@@ -250,7 +250,7 @@ internal class PokerHandTest {
     @Test
     fun `test isJacksOrBetter with two`(){
         //arrange
-        val cards = listOf(
+        val cards = arrayOf(
             Card(HEART, QUEEN),
             Card(HEART, ACE),
             Card(SPADE, JACK),

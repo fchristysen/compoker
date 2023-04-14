@@ -48,7 +48,7 @@ fun MainPage(viewModel: GameViewModel = viewModel()) {
     val state by viewModel.state.collectAsState()
     Column(modifier = Modifier.fillMaxSize()) {
         StatusView(credit = state.credit)
-        ContentView(Modifier.weight(1f), state.cards, state.dropSelection) { i ->
+        ContentView(Modifier.weight(1f), state.cards, state.dropSelection, state.winningCredit, state.winningHand) { i ->
             viewModel.toggleDropCardAt(i)
         }
         ControlView(state = state,
@@ -77,6 +77,8 @@ fun ContentView(
     modifier: Modifier = Modifier,
     cards: Array<Card>,
     selection: Selection,
+    winningCredit: Int,
+    winningHand: PokerHand?,
     onSelect: (Int) -> Unit = { _ -> }
 ) {
     Column(
@@ -89,8 +91,9 @@ fun ContentView(
             .then(modifier)
     ) {
         BoardView(cards = cards, selection = selection, onSelect = { i -> onSelect(i) })
-        cards.getPokerHand()?.also {
+        winningHand?.also {
             Text(text = stringResource(id = it.getDisplayText()))
+            if (winningCredit>0) Text(text = "+ $$winningCredit")
         }
     }
 }

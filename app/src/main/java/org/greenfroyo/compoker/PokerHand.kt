@@ -8,46 +8,57 @@ import kotlin.collections.set
 sealed class PokerHand() {
     @StringRes
     abstract fun getDisplayText(): Int
+    abstract fun getWinningMultiplier(): Int
 }
 
 object ROYAL_STRAIGHT_FLUSH : PokerHand() {
     override fun getDisplayText() = R.string.text_win_royal_straight_flush
+    override fun getWinningMultiplier() = 250
 }
 
 object STRAIGHT_FLUSH : PokerHand() {
     override fun getDisplayText() = R.string.text_win_flush
+    override fun getWinningMultiplier() = 50
 }
 
 object FOUR_OF_A_KIND : PokerHand() {
     override fun getDisplayText() = R.string.text_win_four_of_a_kind
+    override fun getWinningMultiplier() = 25
 }
 
 object FULL_HOUSE : PokerHand() {
     override fun getDisplayText() = R.string.text_win_full_house
+    override fun getWinningMultiplier() = 9
 }
 
 object STRAIGHT : PokerHand() {
     override fun getDisplayText() = R.string.text_win_straight
+    override fun getWinningMultiplier() = 6
 }
 
 object FLUSH : PokerHand() {
     override fun getDisplayText() = R.string.text_win_flush
+    override fun getWinningMultiplier() = 5
 }
 
 object THREE_OF_A_KIND : PokerHand() {
     override fun getDisplayText() = R.string.text_win_three_of_a_kind
+    override fun getWinningMultiplier() = 3
 }
 
 object TWO_PAIR : PokerHand() {
     override fun getDisplayText() = R.string.text_win_two_pair
+    override fun getWinningMultiplier() = 3
 }
 
 object ONE_PAIR : PokerHand() {
     override fun getDisplayText() = R.string.text_win_one_pair
+    override fun getWinningMultiplier() = 1
 }
 
 object JACKS_OR_BETTER : PokerHand() {
     override fun getDisplayText() = R.string.text_win_jacks_or_better
+    override fun getWinningMultiplier() = 1
 }
 
 private fun Array<Card>.getOccurences(): Map<CardNumber, Int> {
@@ -56,7 +67,7 @@ private fun Array<Card>.getOccurences(): Map<CardNumber, Int> {
     return occurences
 }
 
-private fun Array<Card>.isStraight(): Boolean {
+fun Array<Card>.isStraight(): Boolean {
     if (this.size != 5) throw IllegalArgumentException("Card must be 5")
     val sorted = this.map { it.number.value }.sorted()
     for (i in 1 until sorted.size) {
@@ -65,16 +76,16 @@ private fun Array<Card>.isStraight(): Boolean {
     return true
 }
 
-private fun Array<Card>.isFlush(): Boolean {
+fun Array<Card>.isFlush(): Boolean {
     if (this.size != 5) throw IllegalArgumentException("Card must be 5")
     return this.all { it.suit == this[0].suit }
 }
 
-private fun Array<Card>.isStraightFlush(): Boolean {
+fun Array<Card>.isStraightFlush(): Boolean {
     return isStraight() && isFlush()
 }
 
-private fun Array<Card>.isRoyalStraightFlush(): Boolean {
+fun Array<Card>.isRoyalStraightFlush(): Boolean {
     return contains(Card(SPADE, TEN)) &&
             contains(Card(SPADE, JACK)) &&
             contains(Card(SPADE, QUEEN)) &&
@@ -82,35 +93,35 @@ private fun Array<Card>.isRoyalStraightFlush(): Boolean {
             contains(Card(SPADE, ACE))
 }
 
-private fun Array<Card>.isFourOfAKind(): Boolean {
+fun Array<Card>.isFourOfAKind(): Boolean {
     if (this.size != 5) throw IllegalArgumentException("Card must be 5")
     return this.getOccurences().containsValue(4)
 }
 
-private fun Array<Card>.isFullHouse(): Boolean {
+fun Array<Card>.isFullHouse(): Boolean {
     if (this.size != 5) throw IllegalArgumentException("Card must be 5")
     val occurences = this.getOccurences()
     return occurences.containsValue(3) && occurences.containsValue(2)
 }
 
-private fun Array<Card>.isThreeOfAKind(): Boolean {
+fun Array<Card>.isThreeOfAKind(): Boolean {
     if (this.size != 5) throw IllegalArgumentException("Card must be 5")
     return this.getOccurences().containsValue(3)
 }
 
-private fun Array<Card>.isTwoPair(): Boolean {
+fun Array<Card>.isTwoPair(): Boolean {
     if (this.size != 5) throw IllegalArgumentException("Card must be 5")
     val occurences = this.getOccurences()
     return occurences.count { it.value == 2 } == 2
 }
 
-private fun Array<Card>.isOnePair(): Boolean {
+fun Array<Card>.isOnePair(): Boolean {
     if (this.size != 5) throw IllegalArgumentException("Card must be 5")
     val occurences = this.getOccurences()
     return occurences.count { it.value == 2 } == 1
 }
 
-private fun Array<Card>.isJacksOrBetter(): Boolean {
+fun Array<Card>.isJacksOrBetter(): Boolean {
     if (this.size != 5) throw IllegalArgumentException("Card must be 5")
     return this.all { it.number.value >= 11 }
 }
