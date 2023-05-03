@@ -4,25 +4,28 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import org.greenfroyo.compoker.GameUseCase
 import org.greenfroyo.compoker.getPokerHand
 
-class GameViewModel(val useCase: GameUseCase = GameUseCase()) : ViewModel() {
-    private val _state = MutableStateFlow(GameState())
-    val state = _state.asStateFlow()
+class GameViewModel: ViewModel() {
+    private val _gameState = MutableStateFlow(GameUiState())
+    val gameState = _gameState.asStateFlow()
 
+    /** User's action to switch betting value
+     */
     fun switchBet() {
-        _state.update {
+        _gameState.update {
             if (it.phase == BETTING) {
-                it.copy(bet = useCase.switchBet(it.bet))
+                it.copy(bet = rotateBetValue(it.bet))
             } else {
                 it
             }
         }
     }
 
+    /** User's action to draw 5 cards, beginning the round
+     */
     fun draw() {
-        _state.update {
+        _gameState.update {
             val (draws, afterDeck) = Deck().draw(5)
             it.copy(
                 phase = DRAWN,
@@ -34,8 +37,10 @@ class GameViewModel(val useCase: GameUseCase = GameUseCase()) : ViewModel() {
         }
     }
 
+    /** User's action to toggle card droppings
+     */
     fun toggleDropCardAt(position: Int) {
-        _state.update {
+        _gameState.update {
             if (it.phase == DRAWN) {
                 val afterSelection = it.dropSelection.toggle(position)
                 it.copy(dropSelection = afterSelection)
@@ -45,8 +50,10 @@ class GameViewModel(val useCase: GameUseCase = GameUseCase()) : ViewModel() {
         }
     }
 
+    /** User's action to drop selected cards then continue to poker hand results
+     */
     fun drop() {
-        _state.update {
+        _gameState.update {
             var deck = Deck()
             val afterCards = (0..4).map { i ->
                 if (it.dropSelection.isSelected(i)) {
@@ -69,6 +76,14 @@ class GameViewModel(val useCase: GameUseCase = GameUseCase()) : ViewModel() {
                 winningHand = afterCards.getPokerHand(),
                 winningCredit = winningCredit
             )
+        }
+    }
+
+    private fun rotateBetValue(currentBet: Int): Int{
+        return when(currentBet){
+            5 -> 10
+            10 -> 25
+            else -> 5
         }
     }
 }

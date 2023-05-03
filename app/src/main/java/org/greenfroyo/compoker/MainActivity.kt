@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    MainPage()
+                    Screen()
                 }
             }
         }
@@ -44,8 +44,8 @@ class MainActivity : ComponentActivity() {
 
 @Preview(showBackground = true)
 @Composable
-fun MainPage(viewModel: GameViewModel = viewModel()) {
-    val state by viewModel.state.collectAsState()
+fun Screen(viewModel: GameViewModel = viewModel()) {
+    val state by viewModel.gameState.collectAsState()
     Column(modifier = Modifier.fillMaxSize()) {
         StatusView(credit = state.credit)
         ContentView(Modifier.weight(1f), state.cards, state.dropSelection, state.winningCredit, state.winningHand) { i ->
@@ -101,7 +101,7 @@ fun ContentView(
 @Composable
 fun ControlView(
     modifier: Modifier = Modifier,
-    state: GameState,
+    state: GameUiState,
     actSwitchBet: () -> Unit,
     actDraw: () -> Unit,
     actDrop: () -> Unit

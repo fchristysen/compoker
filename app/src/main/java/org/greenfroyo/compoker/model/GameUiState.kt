@@ -2,7 +2,7 @@ package org.greenfroyo.compoker.model
 
 import org.greenfroyo.compoker.PokerHand
 
-data class GameState(
+data class GameUiState(
     val phase: Phase = BETTING,
     val credit: Int = 200,
     val bet: Int = 5,
