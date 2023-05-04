@@ -6,7 +6,7 @@ import androidx.annotation.DrawableRes
 class Card(val suit: CardSuit = CardSuit.SPADE, val number: CardNumber = ACE) {
     @DrawableRes
     fun getImageResources(context: Context): Int{
-        val drawableName = "card_${suitToDrawableName()}_${numberToDrawableName()}"
+        val drawableName = "${suitToDrawableName()}_${numberToDrawableName()}"
         return context.resources.getIdentifier(drawableName, "drawable", context.packageName)
     }
 
@@ -18,7 +18,7 @@ class Card(val suit: CardSuit = CardSuit.SPADE, val number: CardNumber = ACE) {
     }
 
     private fun numberToDrawableName() = when(number){
-        ACE -> "a"
+        ACE -> "ace"
         EIGHT -> "08"
         FIVE -> "05"
         FOUR -> "04"
