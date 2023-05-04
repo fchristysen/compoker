@@ -3,14 +3,17 @@ package org.greenfroyo.compoker.model
 import android.content.Context
 import androidx.annotation.DrawableRes
 
-class Card(val suit: CardSuit = CardSuit.SPADE, val number: CardNumber = ACE) {
+class Card(val suit: CardSuit = CardSuit.HIDDEN, val number: CardNumber = ACE) {
     @DrawableRes
     fun getImageResources(context: Context): Int{
-        val drawableName = "${suitToDrawableName()}_${numberToDrawableName()}"
+        val drawableName =
+            if (suit == CardSuit.HIDDEN) "back"
+            else "${suitToDrawableName()}_${numberToDrawableName()}"
         return context.resources.getIdentifier(drawableName, "drawable", context.packageName)
     }
 
     private fun suitToDrawableName() = when(suit){
+        CardSuit.HIDDEN -> "back"
         CardSuit.SPADE -> "spades"
         CardSuit.HEART -> "hearts"
         CardSuit.CLUB -> "clubs"
@@ -35,6 +38,7 @@ class Card(val suit: CardSuit = CardSuit.SPADE, val number: CardNumber = ACE) {
 }
 
 enum class CardSuit() {
+    HIDDEN,
     SPADE,
     HEART,
     CLUB,

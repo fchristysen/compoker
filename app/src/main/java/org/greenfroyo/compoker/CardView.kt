@@ -26,7 +26,7 @@ import org.greenfroyo.compoker.model.Selection
 @Composable
 fun CardView(
     modifier: Modifier = Modifier,
-    card: Card = Card(CardSuit.SPADE, JACK),
+    card: Card = Card(CardSuit.HIDDEN, JACK),
     isSelected: Boolean = false,
     onClickAction: () -> Unit = {}
 ) {
