@@ -4,6 +4,9 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import org.greenfroyo.compoker.BET_HIGH
+import org.greenfroyo.compoker.BET_LOW
+import org.greenfroyo.compoker.BET_MEDIUM
 import org.greenfroyo.compoker.getPokerHand
 
 class GameViewModel: ViewModel() {
@@ -81,9 +84,9 @@ class GameViewModel: ViewModel() {
 
     private fun rotateBetValue(currentBet: Int): Int{
         return when(currentBet){
-            5 -> 10
-            10 -> 25
-            else -> 5
+            BET_LOW -> BET_MEDIUM
+            BET_MEDIUM -> BET_HIGH
+            else -> BET_LOW
         }
     }
 }

@@ -9,5 +9,4 @@ Betting options : 5, 10, 25
 2. DRAWN - User drawn cards
    a. Select card to drop
 
-[//]: # (https://gdevelop.io/asset-store/free/pixel-playing-cards-pixel-playing-cards)
-https://github.com/hayeah/playing-cards-assets
+https://unbent.itch.io/yewbi-playing-card-set-1
