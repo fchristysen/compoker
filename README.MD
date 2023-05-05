@@ -9,5 +9,9 @@ Video Poker built with Jetpack Compose.
 
 Tap on Table to see winning hand
 
+<img src="https://raw.githubusercontent.com/fchristysen/compoker/master/screenshot/start.png" alt= “start.png” width="192px">
+<img src="https://raw.githubusercontent.com/fchristysen/compoker/master/screenshot/select.png" alt= “start.png” width="192px">
+<img src="https://raw.githubusercontent.com/fchristysen/compoker/master/screenshot/winning.png" alt= “start.png” width="192px">
+
 ## Assets
 - Playing card assets taken from [yewbi-playing-card-set-1](https://unbent.itch.io/yewbi-playing-card-set-1)
