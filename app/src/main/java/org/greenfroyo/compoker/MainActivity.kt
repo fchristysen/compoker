@@ -3,6 +3,10 @@ package org.greenfroyo.compoker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,6 +35,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
@@ -95,7 +101,10 @@ fun Screen(viewModel: GameViewModel = viewModel()) {
                     contentScale = ContentScale.FillBounds
                 )
                 Box(modifier = Modifier.fillMaxSize()) {
-                    StatusView(modifier = Modifier.align(Alignment.TopCenter), credit = state.credit)
+                    StatusView(
+                        modifier = Modifier.align(Alignment.TopCenter),
+                        credit = state.credit
+                    )
                     ContentView(
                         Modifier,
                         state.cards,
@@ -116,7 +125,7 @@ fun Screen(viewModel: GameViewModel = viewModel()) {
                             if (viewModel.haveNotEnoughCredit()) viewModel.switchBet()
                         })
                 }
-                if(viewModel.isGameOver()){
+                if (viewModel.isGameOver()) {
                     GameOverDialog {
                         viewModel.restart()
                     }
@@ -145,7 +154,7 @@ fun StatusView(modifier: Modifier = Modifier, credit: Int) {
         Button(onClick = { openTableDialog = true }) {
             Text(text = "TABLE")
         }
-        if (openTableDialog){
+        if (openTableDialog) {
             HandTableDialog { openTableDialog = false }
         }
     }
@@ -206,17 +215,21 @@ fun ContentView(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .weight(4f)
-                .fillMaxWidth()) {
+                .fillMaxWidth()
+        ) {
             winningHand?.also {
                 Spacer(modifier = Modifier.height(24.dp))
-                Text(text = stringResource(id = it.getDisplayText())
-                    , style = MaterialTheme.typography.body2.merge(
-                        TextStyle(brush = Brush.linearGradient(GradientColors)))
+                Text(
+                    text = stringResource(id = it.getDisplayText()),
+                    style = MaterialTheme.typography.body2.merge(
+                        TextStyle(brush = Brush.linearGradient(GradientColors))
+                    )
                 )
                 if (winningCredit > 0)
-                    Text(text = "+ $$winningCredit"
-                        , style = MaterialTheme.typography.body2.merge(
-                            TextStyle(brush = Brush.linearGradient(GradientColors)))
+                    Text(
+                        text = "+ $$winningCredit", style = MaterialTheme.typography.body2.merge(
+                            TextStyle(brush = Brush.linearGradient(GradientColors))
+                        )
                     )
             }
         }
@@ -231,10 +244,11 @@ fun ControlView(
     actDraw: () -> Unit,
     actDrop: () -> Unit
 ) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .then(modifier)
-        , contentAlignment = Alignment.BottomCenter) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(modifier), contentAlignment = Alignment.BottomCenter
+    ) {
         val interactionSource = remember { MutableInteractionSource() }
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -254,8 +268,15 @@ fun ControlView(
             }
         }
         Column() {
-            BettingChip(modifier = Modifier.clickable(interactionSource = interactionSource, indication = null) { actSwitchBet() }, bet = state.bet)
-            Spacer(modifier = Modifier.height(if (state.phase == BETTING) 48.dp else 164.dp))
+            BettingChip(modifier = Modifier.clickable(
+                    interactionSource = interactionSource, indication = null
+                ) { actSwitchBet() }, bet = state.bet
+            )
+            val chipBottomMargin: Int by animateIntAsState(
+                targetValue = if (state.phase == BETTING) 48 else 164,
+                animationSpec = spring(0.5f)
+            )
+            Spacer(modifier = Modifier.height(chipBottomMargin.dp))
         }
 
     }
