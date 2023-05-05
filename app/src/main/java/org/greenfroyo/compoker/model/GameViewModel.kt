@@ -57,7 +57,7 @@ class GameViewModel: ViewModel() {
      */
     fun drop() {
         _gameState.update {
-            var deck = Deck()
+            var deck = it.deck
             val afterCards = (0..4).map { i ->
                 if (it.dropSelection.isSelected(i)) {
                     var pair = deck.drawOne()

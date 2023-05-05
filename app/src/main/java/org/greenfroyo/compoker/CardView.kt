@@ -61,7 +61,7 @@ fun BoardView(
                     card = cards[i],
                     onClickAction = { onSelect(i) })
                 if (selection.isSelected(i)) {
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
             }
         }
