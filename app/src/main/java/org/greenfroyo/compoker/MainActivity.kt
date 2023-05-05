@@ -3,8 +3,6 @@ package org.greenfroyo.compoker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.core.AnimationSpec
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
@@ -35,8 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
@@ -272,11 +268,11 @@ fun ControlView(
                     interactionSource = interactionSource, indication = null
                 ) { actSwitchBet() }, bet = state.bet
             )
-            val chipBottomMargin: Int by animateIntAsState(
+            val chipAnimation: Int by animateIntAsState(
                 targetValue = if (state.phase == BETTING) 48 else 164,
                 animationSpec = spring(0.5f)
             )
-            Spacer(modifier = Modifier.height(chipBottomMargin.dp))
+            Spacer(modifier = Modifier.height(chipAnimation.dp))
         }
 
     }
