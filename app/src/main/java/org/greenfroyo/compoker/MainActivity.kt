@@ -47,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import org.greenfroyo.compoker.model.BETTING
 import org.greenfroyo.compoker.model.Card
 import org.greenfroyo.compoker.model.GameUiState
 import org.greenfroyo.compoker.model.GameViewModel
@@ -94,10 +95,10 @@ fun Screen(viewModel: GameViewModel = viewModel()) {
                     contentDescription = "null",
                     contentScale = ContentScale.FillBounds
                 )
-                Column(modifier = Modifier.fillMaxSize()) {
-                    StatusView(credit = state.credit)
+                Box(modifier = Modifier.fillMaxSize()) {
+                    StatusView(modifier = Modifier.align(Alignment.TopCenter), credit = state.credit)
                     ContentView(
-                        Modifier.weight(1f),
+                        Modifier,
                         state.cards,
                         state.dropSelection,
                         state.winningCredit,
@@ -105,10 +106,21 @@ fun Screen(viewModel: GameViewModel = viewModel()) {
                     ) { i ->
                         viewModel.toggleDropCardAt(i)
                     }
-                    ControlView(state = state,
+                    ControlView(
+                        modifier = Modifier.align(Alignment.BottomCenter),
+                        state = state,
                         actSwitchBet = { viewModel.switchBet() },
                         actDraw = { viewModel.draw() },
-                        actDrop = { viewModel.drop() })
+                        actDrop = {
+                            viewModel.drop()
+                            viewModel.newRound()
+                            if (viewModel.haveNotEnoughCredit()) viewModel.switchBet()
+                        })
+                }
+                if(viewModel.isGameOver()){
+                    GameOverDialog {
+                        viewModel.restart()
+                    }
                 }
             }
         }
@@ -124,10 +136,9 @@ fun StatusView(modifier: Modifier = Modifier, credit: Int) {
             .background(color = DarkBlue)
             .fillMaxWidth()
             .padding(16.dp, 8.dp)
-            .then(modifier)
     ) {
         CreditView(credit = credit)
-        Spacer(modifier = modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(1f))
         Button(onClick = { /*TODO*/ }, enabled = false) {
             Text(text = "TABLE")
         }
@@ -180,11 +191,16 @@ fun ContentView(
             .fillMaxWidth()
             .then(modifier)
     ) {
-        BoardView(modifier = Modifier.weight(5f).fillMaxWidth().padding(horizontal = 12.dp),
+        BoardView(modifier = Modifier
+            .weight(5f)
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp),
             cards = cards, selection = selection, onSelect = { i -> onSelect(i) })
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.weight(4f).fillMaxWidth()) {
+            modifier = Modifier
+                .weight(4f)
+                .fillMaxWidth()) {
             winningHand?.also {
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(text = stringResource(id = it.getDisplayText())
@@ -226,14 +242,14 @@ fun ControlView(
             Button(onClick = { actDraw() }, enabled = state.enableDraw()) {
                 Text(text = "DRAW")
             }
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(52.dp))
             Button(onClick = { actDrop() }, enabled = state.enableDrop()) {
                 Text(text = "DROP")
             }
         }
         Column() {
             BettingChip(modifier = Modifier.clickable(interactionSource = interactionSource, indication = null) { actSwitchBet() }, bet = state.bet)
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(if (state.phase == BETTING) 48.dp else 164.dp))
         }
 
     }

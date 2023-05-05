@@ -18,7 +18,9 @@ class GameViewModel: ViewModel() {
     fun switchBet() {
         _gameState.update {
             if (it.phase == BETTING) {
-                it.copy(bet = rotateBetValue(it.bet))
+                var bet = rotateBetValue(it.bet)
+                while (bet>gameState.value.credit) bet = rotateBetValue(bet)
+                it.copy(bet = bet)
             } else {
                 it
             }
@@ -29,7 +31,7 @@ class GameViewModel: ViewModel() {
      */
     fun draw() {
         _gameState.update {
-            val (draws, afterDeck) = Deck().draw(5)
+            val (draws, afterDeck) = it.deck.draw(5)
             it.copy(
                 phase = DRAWN,
                 credit = it.credit-it.bet,
@@ -71,14 +73,27 @@ class GameViewModel: ViewModel() {
             val winningCredit =
                 if (winningHand == null) 0 else winningHand.getWinningMultiplier() * it.bet
             it.copy(
-                phase = BETTING,
                 credit = it.credit+winningCredit,
                 cards = afterCards,
-                deck = deck,
-                dropSelection = Selection(),
                 winningHand = afterCards.getPokerHand(),
                 winningCredit = winningCredit
             )
+        }
+    }
+
+    fun newRound() {
+        _gameState.update {
+            it.copy(
+                phase = if (it.credit == 0) GAME_OVER else BETTING,
+                deck = Deck(),
+                dropSelection = Selection()
+            )
+        }
+    }
+
+    fun restart() {
+        _gameState.update {
+            GameUiState()
         }
     }
 
@@ -89,4 +104,8 @@ class GameViewModel: ViewModel() {
             else -> BET_LOW
         }
     }
+
+    fun haveNotEnoughCredit() = gameState.value.bet>gameState.value.credit
+
+    fun isGameOver() = gameState.value.phase == GAME_OVER
 }

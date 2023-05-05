@@ -1,11 +1,12 @@
 package org.greenfroyo.compoker.model
 
 import org.greenfroyo.compoker.BET_LOW
+import org.greenfroyo.compoker.INITIAL_CREDIT
 import org.greenfroyo.compoker.PokerHand
 
 data class GameUiState(
     val phase: Phase = BETTING,
-    val credit: Int = 200,
+    val credit: Int = INITIAL_CREDIT,
     val bet: Int = BET_LOW,
     val deck: Deck = Deck(),
     val cards: Array<Card> = Array(5) { Card() },
@@ -23,5 +24,7 @@ sealed class Phase
 object BETTING: Phase()
 
 object DRAWN: Phase()
+
+object GAME_OVER: Phase()
 
 //object DROP: Phase()
