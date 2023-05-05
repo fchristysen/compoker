@@ -61,7 +61,9 @@ import org.greenfroyo.compoker.ui.theme.ChipMediumBG
 import org.greenfroyo.compoker.ui.theme.ChipMediumBorder
 import org.greenfroyo.compoker.ui.theme.ChipMediumText
 import org.greenfroyo.compoker.ui.theme.CompokerTheme
+import org.greenfroyo.compoker.ui.theme.DarkBlue
 import org.greenfroyo.compoker.ui.theme.GradientColors
+import org.greenfroyo.compoker.ui.theme.PrimaryDark
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,7 +121,7 @@ fun StatusView(modifier: Modifier = Modifier, credit: Int) {
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .background(color = Color(0, 31, 43, 255))
+            .background(color = DarkBlue)
             .fillMaxWidth()
             .padding(16.dp, 8.dp)
             .then(modifier)
@@ -154,7 +156,7 @@ fun CreditView(
         Text(
             text = "$",
             fontSize = 34.sp,
-            color = Color(241, 182, 52, 255),
+            color = PrimaryDark,
             fontWeight = FontWeight.Bold
         )
     }
@@ -178,9 +180,11 @@ fun ContentView(
             .fillMaxWidth()
             .then(modifier)
     ) {
-        BoardView(modifier = Modifier.weight(3f).fillMaxWidth().padding(horizontal = 12.dp).background(Color.Blue),
+        BoardView(modifier = Modifier.weight(5f).fillMaxWidth().padding(horizontal = 12.dp),
             cards = cards, selection = selection, onSelect = { i -> onSelect(i) })
-        Column(modifier = Modifier.weight(2f).fillMaxWidth().background(Color.Red)) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.weight(4f).fillMaxWidth()) {
             winningHand?.also {
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(text = stringResource(id = it.getDisplayText())
@@ -214,7 +218,7 @@ fun ControlView(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .background(color = Color(0, 31, 43, 255))
+                .background(color = DarkBlue)
                 .fillMaxWidth()
                 .padding(12.dp)
                 .then(modifier)

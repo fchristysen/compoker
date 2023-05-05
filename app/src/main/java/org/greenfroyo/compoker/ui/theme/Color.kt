@@ -2,10 +2,12 @@ package org.greenfroyo.compoker.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val Primary = Color(0xFFF2DC5D)
+val PrimaryDark = Color(0xFFE2C312)
+val PrimaryVariant = Color(0xFFF2A359)
+val Secondary = Color(0xFFA4031F)
+
+val DarkBlue = Color(0xFF001F2B)
 
 val ChipLowBG = Color(0xFFEEEEEE)
 val ChipLowBorder = Color(0xFFE73400)

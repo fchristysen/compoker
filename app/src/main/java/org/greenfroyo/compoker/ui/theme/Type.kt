@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import org.greenfroyo.compoker.R
@@ -12,6 +13,7 @@ import org.greenfroyo.compoker.R
 val fonts = FontFamily(
     Font(resId = R.font.newrodin_light, weight = FontWeight.Light),
     Font(resId = R.font.newrodin_medium, weight = FontWeight.Normal),
+    Font(resId = R.font.newrodin_semibold, weight = FontWeight.SemiBold),
     Font(resId = R.font.newrodin_bold, weight = FontWeight.Bold)
 )
 
@@ -26,13 +28,12 @@ val Typography = Typography(
     // for displaying winning hand and credit earnings
     body2 = TextStyle(
         fontFamily = fonts,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 20.sp,
-        color = Color(0xFFDDDDDD)
     ),
     button = TextStyle(
         fontFamily = fonts,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 14.sp
     )
     /* Other default text styles to override
