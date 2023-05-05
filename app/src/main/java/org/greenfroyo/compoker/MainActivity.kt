@@ -26,7 +26,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -136,11 +138,18 @@ fun StatusView(modifier: Modifier = Modifier, credit: Int) {
             .background(color = DarkBlue)
             .fillMaxWidth()
             .padding(16.dp, 8.dp)
+            .then(modifier)
     ) {
         CreditView(credit = credit)
         Spacer(modifier = Modifier.weight(1f))
-        Button(onClick = { /*TODO*/ }, enabled = false) {
+        var openTableDialog by remember {
+            mutableStateOf(false)
+        }
+        Button(onClick = { openTableDialog = true }) {
             Text(text = "TABLE")
+        }
+        if (openTableDialog){
+            HandTableDialog { openTableDialog = false }
         }
     }
 }

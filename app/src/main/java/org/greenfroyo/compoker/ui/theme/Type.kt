@@ -22,8 +22,8 @@ val fonts = FontFamily(
 val Typography = Typography(
     body1 = TextStyle(
         fontFamily = fonts,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
+        fontWeight = FontWeight.Light,
+        fontSize = 14.sp
     ),
     // for displaying winning hand and credit earnings
     body2 = TextStyle(
