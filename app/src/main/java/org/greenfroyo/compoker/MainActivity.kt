@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,12 +30,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,6 +61,7 @@ import org.greenfroyo.compoker.ui.theme.ChipMediumBG
 import org.greenfroyo.compoker.ui.theme.ChipMediumBorder
 import org.greenfroyo.compoker.ui.theme.ChipMediumText
 import org.greenfroyo.compoker.ui.theme.CompokerTheme
+import org.greenfroyo.compoker.ui.theme.GradientColors
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -155,6 +162,7 @@ fun CreditView(
 }
 
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun ContentView(
     modifier: Modifier = Modifier,
@@ -166,15 +174,25 @@ fun ContentView(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .then(modifier)
     ) {
-        BoardView(cards = cards, selection = selection, onSelect = { i -> onSelect(i) })
-        winningHand?.also {
-            Text(text = stringResource(id = it.getDisplayText()))
-            if (winningCredit > 0) Text(text = "+ $$winningCredit")
+        BoardView(modifier = Modifier.weight(3f).fillMaxWidth().padding(horizontal = 12.dp).background(Color.Blue),
+            cards = cards, selection = selection, onSelect = { i -> onSelect(i) })
+        Column(modifier = Modifier.weight(2f).fillMaxWidth().background(Color.Red)) {
+            winningHand?.also {
+                Spacer(modifier = Modifier.height(24.dp))
+                Text(text = stringResource(id = it.getDisplayText())
+                    , style = MaterialTheme.typography.body2.merge(
+                        TextStyle(brush = Brush.linearGradient(GradientColors)))
+                )
+                if (winningCredit > 0)
+                    Text(text = "+ $$winningCredit"
+                        , style = MaterialTheme.typography.body2.merge(
+                            TextStyle(brush = Brush.linearGradient(GradientColors)))
+                    )
+            }
         }
     }
 }
@@ -187,24 +205,35 @@ fun ControlView(
     actDraw: () -> Unit,
     actDrop: () -> Unit
 ) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .background(color = Color(0, 31, 43, 255))
-            .fillMaxWidth()
-            .padding(16.dp)
-            .then(modifier)
-    ) {
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .then(modifier)
+        , contentAlignment = Alignment.BottomCenter) {
         val interactionSource = remember { MutableInteractionSource() }
-        BettingChip(modifier = Modifier.clickable(interactionSource = interactionSource, indication = null) { actSwitchBet() }, bet = state.bet)
-        Button(onClick = { actDraw() }, enabled = state.enableDraw()) {
-            Text(text = "Draw")
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .background(color = Color(0, 31, 43, 255))
+                .fillMaxWidth()
+                .padding(12.dp)
+                .then(modifier)
+        ) {
+            Button(onClick = { actDraw() }, enabled = state.enableDraw()) {
+                Text(text = "DRAW")
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Button(onClick = { actDrop() }, enabled = state.enableDrop()) {
+                Text(text = "DROP")
+            }
         }
-        Button(onClick = { actDrop() }, enabled = state.enableDrop()) {
-            Text(text = "Drop")
+        Column() {
+            BettingChip(modifier = Modifier.clickable(interactionSource = interactionSource, indication = null) { actSwitchBet() }, bet = state.bet)
+            Spacer(modifier = Modifier.height(48.dp))
         }
+
     }
+
 }
 
 @Composable
